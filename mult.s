@@ -12,7 +12,7 @@ nl:	.asciiz "\n"
 
 
 op1:	.word 7				# change the multiplication operands
-op2:	.word 19			# for testing.
+op2:	.word 4			# for testing.
 
 
 	.text
@@ -53,10 +53,23 @@ ready:
 
 multiply:
 ##############################################################################
-# Your code goes here.
-# Should have the same functionality as running
-#	multu	$a1, $a0
-#	mflo	$a2
+#s0 = a0
+#s1 = a1
+#s2 = temp bool
+#s3 = 1 digit checker
+
+addi $s0,$a0,0     # first input 
+addi $s1,$a1,0     # second input
+addi $a2,$0,0      # Multiplication result
+addi $s3,$0,1      # 1 digit checker
+loop:
+    and $s2,$s1,$s3
+    bne $s2,$s3,next_bit
+    addu $a2,$a2,$s0  # if (multiplicand & 1) result += multiplier << shift
+next_bit:
+    sll $s0,$s0,1     #  multiplier <<= 1
+    sll $s3,$s3,1     #  digit checker <<= 1
+    bne $s3,$0,loop
 ##############################################################################
 
 
